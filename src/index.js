@@ -11,16 +11,11 @@ const compileResources = require('serverless/lib/plugins/aws/package/compile/eve
 const compileCors = require('serverless/lib/plugins/aws/package/compile/events/apiGateway/lib/cors')
 const compileDeployment = require('serverless/lib/plugins/aws/package/compile/events/apiGateway/lib/deployment')
 const getStackInfo = require('serverless/lib/plugins/aws/info/getStackInfo')
-// Kinesis
-const compileMethodsToKinesis = require('./proxies/kinesis/compileMethods')
-const compileIamRoleToKinesis = require('./proxies/kinesis/compileIamRole')
-const validateKinesisServiceProxy = require('./proxies/kinesis/validateServiceProxy')
-const compileKinesisServiceProxy = require('./proxies/kinesis/compileServiceProxy')
-// SQS
-const compileMethodsToSqs = require('./proxies/sqs/compileMethods')
-const compileIamRoleToSqs = require('./proxies/sqs/compileIamRole')
-const validateSqsServiceProxy = require('./proxies/sqs/validateServiceProxy')
-const compileSqsServiceProxy = require('./proxies/sqs/compileServiceProxy')
+
+const kinesisProxy = require('./proxies/kinesis')
+const sqsProxy = require('./proxies/sqs')
+
+const proxies = [kinesisProxy, sqsProxy]
 
 class ServerlessApigatewayServiceProxy {
   constructor(serverless, options) {
@@ -35,41 +30,32 @@ class ServerlessApigatewayServiceProxy {
       this,
       compileRestApi,
       compileResources,
-      compileMethodsToKinesis,
-      compileIamRoleToKinesis,
       compileCors,
       compileDeployment,
-      validateKinesisServiceProxy,
-      compileKinesisServiceProxy,
-      compileMethodsToSqs,
-      compileIamRoleToSqs,
-      compileSqsServiceProxy,
-      validateSqsServiceProxy,
       getStackInfo,
       validate,
       methods,
       utils
     )
+    proxies.forEach((proxy) => Object.assign(this, proxy))
 
     this.hooks = {
       'package:compileEvents': async () => {
-        if (this.getAllServiceProxies().length > 0) {
+        if (this.haveServiceProxy()) {
           this.validated = await this.validateServiceProxies()
           await this.compileRestApi()
           await this.compileResources()
           await this.compileCors()
 
-          //Kinesis proxy
+          // Proxies
           await this.compileKinesisServiceProxy()
-
-          // SQS getProxy
           await this.compileSqsServiceProxy()
 
           await this.mergeDeployment()
         }
       },
       'after:deploy:deploy': async () => {
-        if (this.getAllServiceProxies().length > 0) {
+        if (this.haveServiceProxy()) {
           await this.getStackInfo()
           await this.display()
         }

@@ -1,10 +1,14 @@
 'use strict'
 
+function getAllServiceProxies() {
+  if (this.serverless.service.custom && this.serverless.service.custom.apiGatewayServiceProxies) {
+    return this.serverless.service.custom.apiGatewayServiceProxies
+  }
+  return []
+}
 module.exports = {
-  getAllServiceProxies() {
-    if (this.serverless.service.custom && this.serverless.service.custom.apiGatewayServiceProxies) {
-      return this.serverless.service.custom.apiGatewayServiceProxies
-    }
-    return []
+  getAllServiceProxies,
+  haveServiceProxy() {
+    return getAllServiceProxies().length > 0
   }
 }
