@@ -41,3 +41,4 @@ tmp
 .coveralls.yml
 tmpdirs-serverless
 .eslintcache
+.serverless

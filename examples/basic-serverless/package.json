@@ -1,0 +1,17 @@
+{
+  "name": "basic-serverless",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Some basic serverless api gateway service proxy example",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serverless": "serverless"
+  },
+  "keywords": [],
+  "author": "Serverless User",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless": "^1.41.1"
+  }
+}

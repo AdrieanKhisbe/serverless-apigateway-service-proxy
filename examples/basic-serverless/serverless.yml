@@ -1,0 +1,28 @@
+service: basic-serverless
+
+#plugins:
+
+provider:
+  name: aws
+  stage: ${env:NODE_ENV, 'development'}
+  runtime: nodejs8.10
+  region: eu-west-1
+  environment:
+    NODE_ENV: ${self:provider.stage}
+#custom:
+
+functions:
+  simple-handler:
+    handler: index.handler
+    name: basic-serverless--simple-handler-${self:provider.stage}
+    description: Simple Http handler
+    memorySize: 128
+    timeout: 10
+    events:
+      - http:
+          path: /hello
+          method: GET
+          cors: true
+
+resources:
+  Description: Cloudformation for Basic Serverless Api
