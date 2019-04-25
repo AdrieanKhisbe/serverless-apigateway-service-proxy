@@ -1,6 +1,7 @@
 service: basic-serverless
 
-#plugins:
+plugins:
+  - serverless-apigateway-service-proxy
 
 provider:
   name: aws
@@ -9,7 +10,19 @@ provider:
   region: eu-west-1
   environment:
     NODE_ENV: ${self:provider.stage}
-#custom:
+
+custom:
+  apiGatewayServiceProxies:
+    - kinesis:
+        path: /proxies/kinesis
+        method: post
+        streamName: { Ref: 'SomeStream' }
+        cors: true
+    - sqs:
+        path: /proxies/sqs
+        method: post
+        queueName: {"Fn::GetAtt":[ "SomeSQSQueue", "QueueName" ]}
+        cors: true
 
 functions:
   simple-handler:
@@ -26,3 +39,13 @@ functions:
 
 resources:
   Description: Cloudformation for Basic Serverless Api
+  Resources:
+    SomeStream:
+      Type: AWS::Kinesis::Stream
+      Properties:
+        Name: basic-serverless-example-kinesis
+        ShardCount: 1
+    SomeSQSQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        Name: basic-serverless-example-sqs
