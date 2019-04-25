@@ -90,8 +90,8 @@ class ServerlessApigatewayServiceProxy {
   async display() {
     let message = ''
     let serviceProxyMessages = ''
-
-    const endpointInfo = this.gatheredData.info.endpoint
+    const info = this.gatheredData.info
+    const endpointInfo = _.get(info, 'endpoint', _.get(info, 'endpoints[0]'))
     message += `${chalk.yellow.underline('Serverless APIGateway Service Proxy OutPuts')}\n`
     message += `${chalk.yellow('endpoints:')}`
 
