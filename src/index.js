@@ -14,8 +14,9 @@ const getStackInfo = require('serverless/lib/plugins/aws/info/getStackInfo')
 
 const kinesisProxy = require('./proxies/kinesis')
 const sqsProxy = require('./proxies/sqs')
+const s3Proxy = require('./proxies/s3')
 
-const proxies = [kinesisProxy, sqsProxy]
+const proxies = [kinesisProxy, sqsProxy, s3Proxy]
 
 class ServerlessApigatewayServiceProxy {
   constructor(serverless, options) {
@@ -50,6 +51,7 @@ class ServerlessApigatewayServiceProxy {
           // Proxies
           await this.compileKinesisServiceProxy()
           await this.compileSqsServiceProxy()
+          await this.compileS3ServiceProxy()
 
           await this.mergeDeployment()
         }
