@@ -13,6 +13,6 @@
   "license": "MIT",
   "devDependencies": {
     "serverless": "^1.41.1",
-    "serverless-apigateway-service-proxy": "../.."
+    "serverless-apigateway-service-proxy": "^0.3.0"
   }
 }

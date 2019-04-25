@@ -48,4 +48,4 @@ resources:
     SomeSQSQueue:
       Type: "AWS::SQS::Queue"
       Properties:
-        Name: basic-serverless-example-sqs
+        QueueName: basic-serverless-example-sqs
