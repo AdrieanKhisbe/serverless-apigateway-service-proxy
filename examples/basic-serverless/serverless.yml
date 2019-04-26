@@ -23,6 +23,11 @@ custom:
         method: post
         queueName: {"Fn::GetAtt":[ "SomeSQSQueue", "QueueName" ]}
         cors: true
+    - s3:
+        path: /proxies/s3
+        method: get
+        bucket: {Ref: 'SomeBucket'}
+        cors: true
 
 functions:
   simple-handler:
@@ -49,3 +54,7 @@ resources:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: basic-serverless-example-sqs
+    SomeBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: basic-serverless-example-s3

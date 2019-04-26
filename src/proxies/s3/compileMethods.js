@@ -63,18 +63,15 @@ module.exports = {
             {
               Ref: 'AWS::Region'
             },
-            ':sqs:path//', // §FIXME: get real path
-            {
-              Ref: 'AWS::AccountId'
-            },
-            '/',
-            bucket
+            ':s3:path/{bucket}/{object}'
           ]
         ]
       },
       RequestParameters: {
-        'integration.request.querystring.Action': "'SendMessage'", // §FIXME
-        'integration.request.querystring.MessageBody': 'method.request.body.message' // §FIXME
+        'integration.request.path.bucket': {
+          'Fn::Join': ["'", ['', bucket, '']]
+        },
+        'integration.request.path.object': '"test"'
       },
       RequestTemplates: { 'application/json': '{statusCode:200}' }
     }
