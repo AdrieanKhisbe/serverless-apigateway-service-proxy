@@ -46,7 +46,7 @@ module.exports = {
 
   async getS3MethodIntegration(http) {
     let bucket = http.bucket
-    if (typeof http.queueName == 'string') {
+    if (typeof bucket == 'string') {
       bucket = `"${bucket}"`
     }
     const integration = {

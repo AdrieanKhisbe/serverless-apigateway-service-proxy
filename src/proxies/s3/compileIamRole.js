@@ -3,7 +3,7 @@ const _ = require('lodash')
 const BbPromise = require('bluebird')
 
 module.exports = {
-  async compileIamRoleToSqs() {
+  async compileIamRoleToS3() {
     await BbPromise.all(
       this.getAllServiceProxies().map(async (serviceProxy) => {
         Object.keys(serviceProxy).forEach(async (serviceName) => {

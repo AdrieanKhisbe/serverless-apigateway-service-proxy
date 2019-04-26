@@ -5,7 +5,7 @@ const compileIamRole = require('./compileIamRole')
 const validateServiceProxy = require('./validateServiceProxy')
 const compileServiceProxy = require('./compileServiceProxy')
 
-module.export = _.assign(
+module.exports = _.assign(
   {},
   compileIamRole,
   compileServiceProxy,

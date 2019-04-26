@@ -1,14 +1,13 @@
 'use strict'
 
-function getAllServiceProxies() {
-  if (this.serverless.service.custom && this.serverless.service.custom.apiGatewayServiceProxies) {
-    return this.serverless.service.custom.apiGatewayServiceProxies
-  }
-  return []
-}
+const _ = require('lodash')
+
 module.exports = {
-  getAllServiceProxies,
+  getAllServiceProxies() {
+    const proxies = _.get(this, 'serverless.service.custom.apiGatewayServiceProxies')
+    return proxies || []
+  },
   haveServiceProxy() {
-    return getAllServiceProxies().length > 0
+    return !_.isEmpty(this.getAllServiceProxies())
   }
 }
