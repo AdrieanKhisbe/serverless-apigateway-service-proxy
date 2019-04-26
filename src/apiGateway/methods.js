@@ -1,21 +1,15 @@
 'use strict'
+const _ = require('lodash')
 
 module.exports = {
-  async getMethodResponses(http) {
+  async getMethodResponses(http, extraStatus = []) {
     const methodResponse = {
       Properties: {
-        MethodResponses: [
-          {
-            ResponseParameters: {},
-            ResponseModels: {},
-            StatusCode: 200
-          },
-          {
-            ResponseParameters: {},
-            ResponseModels: {},
-            StatusCode: 400
-          }
-        ]
+        MethodResponses: _.map([200, 400].concat(extraStatus), (status) => ({
+          ResponseParameters: {},
+          ResponseModels: {},
+          StatusCode: status
+        }))
       }
     }
 

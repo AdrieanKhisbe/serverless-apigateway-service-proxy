@@ -25,7 +25,7 @@ module.exports = {
         _.merge(
           template,
           await this.getS3MethodIntegration(event.http),
-          await this.getMethodResponses(event.http)
+          await this.getMethodResponses(event.http, [404])
         )
 
         const methodLogicalId = this.provider.naming.getMethodLogicalId(
@@ -89,6 +89,17 @@ module.exports = {
           SelectionPattern: 400,
           ResponseParameters: {},
           ResponseTemplates: {}
+        },
+        {
+          StatusCode: 404,
+          SelectionPattern: 403,
+          ResponseTemplates: {
+            'application/xml': `Path not found: /${http.path.replace(
+              '/{proxy+}',
+              ''
+            )}/$input.params().get('path').get('proxy')`
+          },
+          ResponseParameters: {}
         }
       ]
     }
