@@ -28,6 +28,22 @@ module.exports = {
           await this.getMethodResponses(event.http, [404])
         )
 
+        // Forward contentType of object when Found
+        const okMethodResponse = _.find(template.Properties.MethodResponses, { StatusCode: 200 })
+        _.set(
+          okMethodResponse.ResponseParameters,
+          ['method.response.header.Content-Type'],
+          'integration.response.header.Content-Type'
+        )
+        const okIntegrationResponse = _.find(template.Properties.Integration.IntegrationResponses, {
+          StatusCode: 200
+        })
+        _.set(
+          okIntegrationResponse.ResponseParameters,
+          ['method.response.header.Content-Type'],
+          'integration.response.header.Content-Type'
+        )
+
         const methodLogicalId = this.provider.naming.getMethodLogicalId(
           resourceName,
           event.http.method
