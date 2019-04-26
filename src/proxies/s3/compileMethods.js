@@ -50,7 +50,7 @@ module.exports = {
       bucket = `"${bucket}"`
     }
     const integration = {
-      IntegrationHttpMethod: 'GET', // §tocheck
+      IntegrationHttpMethod: 'GET',
       Type: 'AWS',
       Credentials: {
         'Fn::GetAtt': ['ApigatewayToS3Role', 'Arn']
@@ -71,7 +71,7 @@ module.exports = {
         'integration.request.path.bucket': {
           'Fn::Join': ["'", ['', bucket, '']]
         },
-        'integration.request.path.object': '"test"'
+        'integration.request.path.object': 'method.request.path.proxy'
       },
       RequestTemplates: { 'application/json': '{statusCode:200}' }
     }
@@ -110,7 +110,8 @@ module.exports = {
 
     return {
       Properties: {
-        Integration: integration
+        Integration: integration,
+        RequestParameters: { 'method.request.path.proxy': true }
       }
     }
   }

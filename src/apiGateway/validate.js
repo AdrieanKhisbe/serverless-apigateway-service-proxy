@@ -9,14 +9,17 @@ module.exports = {
     const corsPreflight = {}
     await BbPromise.all(
       this.getAllServiceProxies().map(async (serviceProxy) => {
-        Object.keys(serviceProxy).forEach(async (functionName) => {
-          await this.checkAllowedService(functionName)
-          const http = serviceProxy[functionName]
-          http.path = await this.getProxyPath(serviceProxy[functionName])
-          http.method = await this.getProxyMethod(serviceProxy[functionName])
+        Object.keys(serviceProxy).forEach(async (serviceName) => {
+          await this.checkAllowedService(serviceName)
 
-          if (serviceProxy[functionName].cors) {
-            http.cors = await this.getCors(serviceProxy[functionName])
+          const http = serviceProxy[serviceName]
+          http.method = await this.getProxyMethod(serviceProxy[serviceName])
+          http.path = await this.getProxyPath(serviceProxy[serviceName])
+          // FIXME:quick and dirty path injection for s3
+          if (serviceName === 's3') http.path += '/{proxy+}'
+
+          if (serviceProxy[serviceName].cors) {
+            http.cors = await this.getCors(serviceProxy[serviceName])
 
             const cors = corsPreflight[http.path] || {}
 
@@ -34,7 +37,7 @@ module.exports = {
             corsPreflight[http.path] = cors
           }
 
-          events.push({ functionName, http })
+          events.push({ functionName: serviceName, http })
         })
       })
     )
