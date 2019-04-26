@@ -15,18 +15,24 @@ custom:
   apiGatewayServiceProxies:
     - kinesis:
         path: /proxies/kinesis
-        method: post
+        method: POST
         streamName: { Ref: 'SomeStream' }
         cors: true
     - sqs:
         path: /proxies/sqs
-        method: post
+        method: POST
         queueName: {"Fn::GetAtt":[ "SomeSQSQueue", "QueueName" ]}
         cors: true
     - s3:
         path: /proxies/s3
-        method: get
+        method: GET
         bucket: {Ref: 'SomeBucket'}
+        cors: true
+    - s3:
+        path: /proxies/s3-with-prefix
+        method: GET
+        bucket: {Ref: 'SomeBucket'}
+        prefix: folder
         cors: true
 
 functions:

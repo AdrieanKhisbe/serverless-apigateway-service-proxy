@@ -61,10 +61,8 @@ module.exports = {
   },
 
   async getS3MethodIntegration(http) {
-    let bucket = http.bucket
-    if (typeof bucket == 'string') {
-      bucket = `"${bucket}"`
-    }
+    const bucket = http.bucket
+    const prefix = http.prefix ? `/${http.prefix.replace(/^\//, '')}` : ''
     const integration = {
       IntegrationHttpMethod: 'GET',
       Type: 'AWS',
@@ -79,7 +77,7 @@ module.exports = {
             {
               Ref: 'AWS::Region'
             },
-            ':s3:path/{bucket}/{object}'
+            `:s3:path/{bucket}${prefix}/{object}`
           ]
         ]
       },
